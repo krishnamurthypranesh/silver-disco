@@ -1,0 +1,74 @@
+<! doctype html>
+<html>
+    <head>
+        <title>Battleship</title>
+        <link rel="styelsheet" type="text/css" href="battleship.css">
+        <meta charset="utf-8">
+
+        <style>
+            body {
+                background-color: black;
+            }
+
+            table {
+                position: absolute;
+                left: 173px;
+                top: 98px;
+                border-spacing: 0px;
+            }
+
+            #grid {
+                border: 2px solid teal;
+                height: 1204px;
+                width: 863px;
+            }
+            
+            .grid-col {
+                height: 50px;
+                width: 50px;
+                padding: 2px;
+                border: 1px solid darkgreen;
+            }
+
+            .sl {
+                border: 2px solid green;
+            }
+
+            .sl-id {
+                color: lightgreen;
+            }
+
+            #messageArea {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                color: rgb(83, 175, 19);
+                background-color: darkgreen;
+            }
+
+            #message {
+                color: teal;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div id="message-area">
+        </div>
+        <div id="grid-input">
+            <form action="" method="" id="grid-input-form">
+              <label for="gridsize">
+                  <p style="color:white;">What's the size of the grid you wanna play in?:</p>
+              </label>
+              <input type="text" id="fname" name="fname"><br><br>
+              <input type="submit" value="Submit">
+            </form>
+        </div>
+        <div id="bg-circle">
+        </div>
+        <div id="reset">
+            <button id="reset-button" style="display:none;">Reset</button>
+        </div>
+    </body>
+    <script src="battleship.js"></script>
+</html>
