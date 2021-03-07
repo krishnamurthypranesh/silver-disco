@@ -4,6 +4,7 @@ function init() {
   document.getElementById("reset-button").addEventListener("click", event => {
     resetScreen();
   })
+
   // event listener to get the size of the grid from form and generate it
   document.getElementById("grid-input-form").addEventListener("submit", event => {
     event.preventDefault();
@@ -15,27 +16,53 @@ function init() {
     } else {
       grid = generateGrid(parseInt(grid_size));
       document.getElementById("bg-circle").innerHTML = grid;
-    }
 
-    // set fireAtShip() as event listener for all cells on click
-    if (document.getElementById("grid") != null) {
-      var table = document.getElementById("grid").childNodes[0];
-      for (var rowIndex=1; rowIndex < table.childNodes.length; rowIndex++) {
-        row = table.childNodes[rowIndex];
-        for (var colIndex=1; colIndex < row.childNodes.length; colIndex++) {
-          cell = row.childNodes[colIndex];
-          cell.addEventListener('click', event => {
-            elem = event.path[0];
-            var row, col;
-            [row, col] = elem.getAttribute("position").split(",").map(x => parseInt(x));
-            fireAtShip(row, col); 
-          });
-        }
-      }
       // hide the form after rendering the table
       document.getElementById("grid-input").style.display = "none";
       // display the reset button
       document.getElementById("reset-button").style.display = "inline-block";
+
+      // add event listener on the grid
+      document.getElementById("grid").addEventListener("click", event => {
+        target = event.path[0]
+        if (target.classList.contains("sl") ||
+        target.classList.contains("empty")) {
+          console.log("The cell is an ID cell");
+        } else {
+          Grid.handle(target);
+        }
+      });
+    }
+
+    // init the grid object
+    if (document.getElementById("grid") != null) {
+      // object to represent grid
+      Grid = {
+        element: document.getElementById("grid"),
+        shipPositions: {},
+        tries: 0,
+        hits: 0,
+        handle: function(target) {
+          // increment tries by 1
+          this.tries += 1
+          var row, col;
+          // [row, col] = this.getPositions(target);
+          position = target.getAttribute("position")
+          if (position in this.shipPositions) {
+            this.hits += 1;
+            this.displayMessage("hit", position);
+          } else {
+            this.displayMessage("miss", position);
+          }
+        },
+        getPositions: function(cell) {
+          var position = cell.getAttribute("position").split(",").map(x => parseInt(x));
+          return position;
+        },
+        displayMessage: function(result, position) {
+          console.log("Firing resulted in a " + result);
+        }
+      }
     }
   });
 }
@@ -55,13 +82,13 @@ function generateGrid(size) {
         "\" id=\"grid-col-" + col + "\" ");
       var end = "";
       if (row === 0 && col === 0) {
-        null;
+        end += "class=\"grid-col empty\">";
       } else if (row != 0 && col === 0) {
         end += "class=\"grid-col sl\"><p class=\"sl-id\">" + row + "</p>";
       } else if (row === 0 && col != 0) {
         end += "class=\"grid-col sl\"><p class=\"sl-id\">" + col + "</p>";
       } else {
-        end += "class=\"grid-col\">"
+        end += "class=\"grid-col\">";
       }
       end += "</td>";
       inner_html += base + end;
@@ -90,6 +117,7 @@ function fireAtShip(row, col) {
   // Change colour of cell based on condition
   // Add animations to make it exciting
 }
+
 // function to reset the screen
 function resetScreen() {
   document.getElementById("reset-button").style.display = "none";
@@ -97,11 +125,9 @@ function resetScreen() {
   document.getElementById("grid-input").style.display = "block";
   document.getElementById("message-area").style.display = "none";
 }
-// event listener
-// function to generate the background, circle and table
-// object to represent ship
 
 
+// entrypoint
 document.addEventListener("readystatechange", event => {
   if (event.target.readyState === "interactive") {
     init();
