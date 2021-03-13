@@ -1,136 +1,119 @@
-// add event listeners for various events
-function init() {
-  // event listener to reset screen if on click of reset button
-  document.getElementById("reset-button").addEventListener("click", event => {
-    resetScreen();
-  })
+// Requirements:
 
-  // event listener to get the size of the grid from form and generate it
+
+function Grid(gridSize, grid_container) {
+  this.size = gridSize;
+  this.tries = 0;
+  this.numShips = 3;
+  this.container = grid_container;
+  this.shipLocations = new Object();
+  this.hits = 0;
+  
+  this.render = function () {
+    var col = 1, row = 1, position = 1;
+    this.elem = document.createElement("table");
+    var tableBody = document.createElement("tbody");
+    var tableRow, tableCell;
+
+    this.elem.appendChild(tableBody);
+    this.elem.setAttribute("id", "grid");
+
+    while (row <= this.size) {
+      tableRow = document.createElement("tr"); 
+      tableRow.setAttribute("class", "grid-row");
+      col = 1;
+
+      while (col <= this.size) {
+        tableCell = document.createElement("td");
+        tableCell.setAttribute("position", position);
+        tableCell.setAttribute("class", "grid-cell");
+
+        col += 1;
+        position += 1;
+        tableRow.appendChild(tableCell);
+      }
+      
+      row += 1;
+      tableBody.appendChild(tableRow);
+    }
+
+    this.container.appendChild(this.elem);
+  };
+
+  this.setShipLocations = function () {
+    var nums = new Array(this.size * this.size);
+
+    for (var i=0; i <= nums.length - 1; i++) {
+      nums[i] = i + 1;
+    }
+   for (var i=0; i < this.numShips; i++) {
+     var idx = Math.floor(Math.random() * nums.length);
+     loc = nums[idx];
+
+     nums = nums.slice(0, idx).concat(nums.slice(idx + 1, nums.length)); 
+     this.shipLocations[loc] = false;
+    }
+    console.log(this.shipLocations);
+
+  };
+}
+
+function init() {
+  // declare variables
+  var gridSize, grid, grid_container;
+
+  grid_container = document.getElementById("grid-container");
+
+  function getGridSize(event) {
+    gridSize = parseInt(event.target.childNodes[3].value);
+  }
+
+  function fireAtShip (event) {
+    var shipHit, position;
+    grid.tries += 1;
+    position = parseInt(event.target.getAttribute("position"));
+    shipHit = grid.shipLocations[position];
+    if (shipHit == undefined) {
+      alert("You didn't hit any ships!");
+    } else if (shipHit == false) {
+      alert("You hit a ship!");
+      grid.hits += 1;
+      grid.shipLocations[position] = true;
+    } else if (shipHit == true) {
+      alert("You've already sunk this ship. So, I ain't gonna consider this bruv");
+    }
+  }
+
+  // add event listener to the form element
   document.getElementById("grid-input-form").addEventListener("submit", event => {
     event.preventDefault();
-    var grid;
-    var table;
-    var grid_size = document.getElementById("grid-input-form").getElementsByTagName("input")[0].value;
-    if (grid_size == "") {
-      alert("Please input a size value for the grid");
-    } else {
-      grid = generateGrid(parseInt(grid_size));
-      document.getElementById("bg-circle").innerHTML = grid;
 
-      // hide the form after rendering the table
-      document.getElementById("grid-input").style.display = "none";
-      // display the reset button
-      document.getElementById("reset-button").style.display = "inline-block";
+    getGridSize(event);
+    console.log(gridSize);
 
-      // add event listener on the grid
-      document.getElementById("grid").addEventListener("click", event => {
-        target = event.path[0]
-        if (target.classList.contains("sl") ||
-        target.classList.contains("empty")) {
-          console.log("The cell is an ID cell");
-        } else {
-          Grid.handle(target);
-        }
-      });
-    }
+    grid = new Grid(gridSize, grid_container);
+    grid.render();
+    grid.setShipLocations();
 
-    // init the grid object
-    if (document.getElementById("grid") != null) {
-      // object to represent grid
-      Grid = {
-        element: document.getElementById("grid"),
-        shipPositions: {},
-        tries: 0,
-        hits: 0,
-        handle: function(target) {
-          // increment tries by 1
-          this.tries += 1
-          var row, col;
-          // [row, col] = this.getPositions(target);
-          position = target.getAttribute("position")
-          if (position in this.shipPositions) {
-            this.hits += 1;
-            this.displayMessage("hit", position);
-          } else {
-            this.displayMessage("miss", position);
-          }
-        },
-        getPositions: function(cell) {
-          var position = cell.getAttribute("position").split(",").map(x => parseInt(x));
-          return position;
-        },
-        displayMessage: function(result, position) {
-          console.log("Firing resulted in a " + result);
-        }
+    document.getElementById(grid.elem.id).addEventListener("click", event => {
+      fireAtShip(event);
+      // check if the game is over after this
+      if (grid.hits == 3) {
+        var accuracy;
+        accuracy = grid.hits * 100 / grid.tries;
+        alert("You've managed to sink all ships!");
+        alert("You took " + grid.tries + " tries to sink all ships!");
+        alert("This gives you an accuracy of " + accuracy + "%");
       }
-    }
+    });
   });
-}
-
-// function to generate grid based on user input
-function generateGrid(size) {
-  var col = 0;
-  var row = 0;
-  var inner_html = "<span id=\"span-grid\">";
-  inner_html += "<table id=\"grid\">";
-
-  while (row <= size) {
-    col = 0;
-    inner_html += "<tr class=\"grid-row\" id=\"grid-row-" + row + "\">";
-    while (col <= size) {
-      var base = ("<td position=\"" + row + "," + col +
-        "\" id=\"grid-col-" + col + "\" ");
-      var end = "";
-      if (row === 0 && col === 0) {
-        end += "class=\"grid-col empty\">";
-      } else if (row != 0 && col === 0) {
-        end += "class=\"grid-col sl\"><p class=\"sl-id\">" + row + "</p>";
-      } else if (row === 0 && col != 0) {
-        end += "class=\"grid-col sl\"><p class=\"sl-id\">" + col + "</p>";
-      } else {
-        end += "class=\"grid-col\">";
-      }
-      end += "</td>";
-      inner_html += base + end;
-      col += 1
-    }
-    inner_html += "</tr>"
-    row += 1;
-  }
-  inner_html += "</table></span>";
-  return inner_html;
-}
-
-// function to handle user clicking the table (the taking a shot at the
-// battleship action)
-function fireAtShip(row, col) {
-  var message = "";
-  if ((row + col) % 2 === 0) {
-    message = "<p id=\"message\">Sum " + (row + col) + " is even</p>";
-  } else {
-    message = "<p id=\"message\">Sum " + (row + col) + " is odd</p>";
-  }
-  document.getElementById('message-area').innerHTML = message;
-  document.getElementById('message-area').style.display = "block";
-  // get the corresponding cell from the object
-  // Check if that cell is occupied by a ship
-  // Change colour of cell based on condition
-  // Add animations to make it exciting
-}
-
-// function to reset the screen
-function resetScreen() {
-  document.getElementById("reset-button").style.display = "none";
-  document.getElementById("bg-circle").innerHTML = "";
-  document.getElementById("grid-input").style.display = "block";
-  document.getElementById("message-area").style.display = "none";
 }
 
 
 // entrypoint
 document.addEventListener("readystatechange", event => {
   if (event.target.readyState === "interactive") {
-    init();
+    init()
   }
 })
 
