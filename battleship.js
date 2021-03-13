@@ -1,6 +1,3 @@
-// Requirements:
-
-
 function Grid(gridSize, grid_container) {
   this.size = gridSize;
   this.tries = 0;
@@ -32,7 +29,6 @@ function Grid(gridSize, grid_container) {
         position += 1;
         tableRow.appendChild(tableCell);
       }
-      
       row += 1;
       tableBody.appendChild(tableRow);
     }
@@ -84,7 +80,6 @@ function init() {
     }
   }
 
-  // add event listener to the form element
   document.getElementById("grid-input-form").addEventListener("submit", event => {
     event.preventDefault();
 
@@ -97,7 +92,7 @@ function init() {
 
     document.getElementById(grid.elem.id).addEventListener("click", event => {
       fireAtShip(event);
-      // check if the game is over after this
+
       if (grid.hits == 3) {
         var accuracy;
         accuracy = grid.hits * 100 / grid.tries;
