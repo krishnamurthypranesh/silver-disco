@@ -49,6 +49,14 @@
             #message {
                 color: teal;
             }
+            
+            .game-text {
+              color: white; 
+            }
+
+            .hide {
+              display: none; 
+            }
         </style>
 
     </head>
@@ -65,6 +73,15 @@
             </form>
         </div>
         <div id="grid-container">
+        </div>
+        <div class="hide" id="stats-container">
+          <h2 class="game-text" >Stats</h2>
+          <p class="game-text" id="ships-hit">Ships Hit: <span
+          class="game-text data" id="ships-hit-count">0</span></p>
+          <p class="game-text" id="total-tries">Total Tries:
+          <span class="game-text data" id="total-tries-count">0</span></p>
+          <p class="game-text hide" id="accuracy">Accuracy:
+          <span class="game-text data" id="accuracy-count"></span>%</p>
         </div>
         <div id="reset">
             <button id="reset-button" style="display:none;">Reset</button>

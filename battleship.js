@@ -52,8 +52,13 @@ Grid.prototype.setShipLocations =  function () {
    nums = nums.slice(0, idx).concat(nums.slice(idx + 1, nums.length)); 
    this.shipLocations[loc] = false;
   }
-  console.log(this.shipLocations);
 };
+
+// function to update stats counter
+Grid.prototype.updateStatsCounter = function() {
+  document.getElementById("ships-hit-count").innerHTML = this.hits;
+  document.getElementById("total-tries-count").innerHTML = this.tries;
+}
 
 function init() {
   // declare variables
@@ -88,6 +93,8 @@ function init() {
     } else if (shipHit == true) {
       alert("You've already sunk this ship. So, I ain't gonna consider this bruv");
     }
+
+    grid.updateStatsCounter();
   }
 
   document.getElementById("grid-input-form").addEventListener("submit", event => {
@@ -99,11 +106,12 @@ function init() {
       setAttribute("style", "display: block;"));
 
     getGridSize(event);
-    console.log(gridSize);
 
     grid = new Grid(gridSize, grid_container);
     grid.render();
     grid.setShipLocations();
+
+    document.getElementById("stats-container").setAttribute("class", "");
 
     document.getElementById(grid.elem.id).addEventListener("click", event => {
       fireAtShip(event);
@@ -112,8 +120,10 @@ function init() {
         var accuracy;
         accuracy = grid.hits * 100 / grid.tries;
         alert("You've managed to sink all ships!");
-        alert("You took " + grid.tries + " tries to sink all ships!");
-        alert("This gives you an accuracy of " + accuracy + "%");
+        grid.updateStatsCounter();
+        (document.getElementById("accuracy-count").innerHTML =
+          parseFloat(accuracy.toFixed(2)));
+        document.getElementById("accuracy").classList.remove("hide");
       }
     });
   });
@@ -126,7 +136,10 @@ function init() {
         (document.getElementById("grid-input-form").
         setAttribute("style", "display: block;"));
         resetGridInputForm();
-      }));
+        document.getElementById("stats-container").classList.add("hide");
+        document.getElementById("accuracy").classList.add("hide");
+    })
+  );
 }
 
 
