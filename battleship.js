@@ -5,54 +5,55 @@ function Grid(gridSize, grid_container) {
   this.container = grid_container;
   this.shipLocations = new Object();
   this.hits = 0;
-  
-  this.render = function () {
-    var col = 1, row = 1, position = 1;
-    this.elem = document.createElement("table");
-    var tableBody = document.createElement("tbody");
-    var tableRow, tableCell;
-
-    this.elem.appendChild(tableBody);
-    this.elem.setAttribute("id", "grid");
-
-    while (row <= this.size) {
-      tableRow = document.createElement("tr"); 
-      tableRow.setAttribute("class", "grid-row");
-      col = 1;
-
-      while (col <= this.size) {
-        tableCell = document.createElement("td");
-        tableCell.setAttribute("position", position);
-        tableCell.setAttribute("class", "grid-cell");
-
-        col += 1;
-        position += 1;
-        tableRow.appendChild(tableCell);
-      }
-      row += 1;
-      tableBody.appendChild(tableRow);
-    }
-
-    this.container.appendChild(this.elem);
-  };
-
-  this.setShipLocations = function () {
-    var nums = new Array(this.size * this.size);
-
-    for (var i=0; i <= nums.length - 1; i++) {
-      nums[i] = i + 1;
-    }
-   for (var i=0; i < this.numShips; i++) {
-     var idx = Math.floor(Math.random() * nums.length);
-     loc = nums[idx];
-
-     nums = nums.slice(0, idx).concat(nums.slice(idx + 1, nums.length)); 
-     this.shipLocations[loc] = false;
-    }
-    console.log(this.shipLocations);
-
-  };
 }
+
+// function to render the grid
+Grid.prototype.render =  function () {
+  var col = 1, row = 1, position = 1;
+  this.elem = document.createElement("table");
+  var tableBody = document.createElement("tbody");
+  var tableRow, tableCell;
+
+  this.elem.appendChild(tableBody);
+  this.elem.setAttribute("id", "grid");
+
+  while (row <= this.size) {
+    tableRow = document.createElement("tr"); 
+    tableRow.setAttribute("class", "grid-row");
+    col = 1;
+
+    while (col <= this.size) {
+      tableCell = document.createElement("td");
+      tableCell.setAttribute("position", position);
+      tableCell.setAttribute("class", "grid-cell");
+
+      col += 1;
+      position += 1;
+      tableRow.appendChild(tableCell);
+    }
+    row += 1;
+    tableBody.appendChild(tableRow);
+  }
+
+  this.container.appendChild(this.elem);
+};
+
+// function to set ship locations randomly
+Grid.prototype.setShipLocations =  function () {
+  var nums = new Array(this.size * this.size);
+
+  for (var i=0; i <= nums.length - 1; i++) {
+    nums[i] = i + 1;
+  }
+  for (var i=0; i < this.numShips; i++) {
+   var idx = Math.floor(Math.random() * nums.length);
+   loc = nums[idx];
+
+   nums = nums.slice(0, idx).concat(nums.slice(idx + 1, nums.length)); 
+   this.shipLocations[loc] = false;
+  }
+  console.log(this.shipLocations);
+};
 
 function init() {
   // declare variables
@@ -62,8 +63,17 @@ function init() {
 
   function getGridSize(event) {
     gridSize = parseInt(event.target.childNodes[3].value);
+    if (gridSize < 2) {
+      alert("Please input a value greater than or equal to 2!"); 
+    }
   }
 
+  function resetGridInputForm() {
+    (document.getElementById("grid-input-form").
+    getElementsByTagName("input")[0].
+    value = "");
+  }
+  
   function fireAtShip (event) {
     var shipHit, position;
     grid.tries += 1;
@@ -82,6 +92,11 @@ function init() {
 
   document.getElementById("grid-input-form").addEventListener("submit", event => {
     event.preventDefault();
+    event.target.setAttribute("style", "display: none;");
+
+    (document.getElementById("reset").
+      getElementsByTagName("button")[0].
+      setAttribute("style", "display: block;"));
 
     getGridSize(event);
     console.log(gridSize);
@@ -102,6 +117,16 @@ function init() {
       }
     });
   });
+
+  (document.getElementById("reset").
+    getElementsByTagName("button")[0].
+      addEventListener("click", event => {
+        event.target.setAttribute("style", "display: none;");
+        grid_container.innerHTML = "";
+        (document.getElementById("grid-input-form").
+        setAttribute("style", "display: block;"));
+        resetGridInputForm();
+      }));
 }
 
 
@@ -111,4 +136,3 @@ document.addEventListener("readystatechange", event => {
     init()
   }
 })
-
