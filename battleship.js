@@ -67,10 +67,11 @@ function init() {
   grid_container = document.getElementById("grid-container");
 
   function getGridSize(event) {
-    gridSize = parseInt(event.target.childNodes[3].value);
-    if (gridSize < 2) {
-      alert("Please input a value greater than or equal to 2!"); 
+    if (gridSize < 2 || gridSize > 50) {
+      alert("Please input a value between 2 and 50!");
+      return;
     }
+    gridSize = parseInt(event.target.childNodes[3].value);
   }
 
   function resetGridInputForm() {
@@ -99,11 +100,9 @@ function init() {
 
   document.getElementById("grid-input-form").addEventListener("submit", event => {
     event.preventDefault();
-    event.target.setAttribute("style", "display: none;");
+    event.target.classList.add("hide");
 
-    (document.getElementById("reset").
-      getElementsByTagName("button")[0].
-      setAttribute("style", "display: block;"));
+    document.getElementById("reset").classList.remove("hide");
 
     getGridSize(event);
 
@@ -124,6 +123,7 @@ function init() {
         (document.getElementById("accuracy-count").innerHTML =
           parseFloat(accuracy.toFixed(2)));
         document.getElementById("accuracy").classList.remove("hide");
+        document.getElementById("play-again").classList.remove("hide")
       }
     });
   });
@@ -131,15 +131,21 @@ function init() {
   (document.getElementById("reset").
     getElementsByTagName("button")[0].
       addEventListener("click", event => {
-        event.target.setAttribute("style", "display: none;");
+        event.target.parentNode.classList.add("hide");
+
         grid_container.innerHTML = "";
+
         (document.getElementById("grid-input-form").
-        setAttribute("style", "display: block;"));
+        classList.remove("hide"));
+
         resetGridInputForm();
+
         document.getElementById("stats-container").classList.add("hide");
         document.getElementById("accuracy").classList.add("hide");
     })
   );
+
+  (document.getElementById("play-again"));
 }
 
 

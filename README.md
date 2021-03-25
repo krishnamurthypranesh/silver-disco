@@ -2,14 +2,7 @@
 A HTML, CSS and JS based game to improve my noob JS and non-existent front-end skillz.
 
 # Backlog
-
     [] Use a bread crumb instead of alert to display messages
-
-    [] Hide the grid from once the grid is generated
-
-    [] Give the user the option to reset the grid
-
-    [] Give the user the option to play again
 
     [] Add animations for:
 
@@ -57,3 +50,9 @@ A HTML, CSS and JS based game to improve my noob JS and non-existent front-end s
      [X] Total number of tries it took the user to win the game
 
      [X] Accuracy of the user
+
+    [X] Hide the grid from once the grid is generated
+
+    [X] Give the user the option to reset the grid
+
+    [X] Give the user the option to play again

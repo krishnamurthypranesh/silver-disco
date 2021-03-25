@@ -7,7 +7,7 @@
 
         <style>
             body {
-                background-color: black;
+                background-color: white;
             }
 
             table {
@@ -22,7 +22,7 @@
                 height: 800px;
                 width: 800px;
             }
-            
+
             .grid-cell {
                 height: 50px;
                 width: 50px;
@@ -38,54 +38,64 @@
                 color: lightgreen;
             }
 
-            #messageArea {
+            .bread-crumb {
                 position: absolute;
-                top: 0px;
-                left: 0px;
+                top: 2%;
+                left: 75%;
+                width: 400px;
+                height: 200px;
                 color: rgb(83, 175, 19);
-                background-color: darkgreen;
+                background-color: #006994;
+                border-radius: 8px;
             }
 
             #message {
                 color: teal;
             }
-            
+
             .game-text {
-              color: white; 
+              color: black;
             }
 
             .hide {
-              display: none; 
+              display: none;
             }
         </style>
 
     </head>
+
     <body>
-        <div id="message-area">
+
+        <div class="bread-crumb" id="bread-crumb">
         </div>
+
         <div id="grid-input">
             <form action="" method="" id="grid-input-form">
               <label for="gridsize">
-                  <p style="color:white;">What's the size of the grid you wanna play in?:</p>
+                  <p class="game-text">What's the size of the grid you wanna play in?:</p>
               </label>
               <input type="text" id="fname" name="fname"><br><br>
               <input type="submit" value="Submit">
             </form>
         </div>
+
         <div id="grid-container">
         </div>
+
         <div class="hide" id="stats-container">
-          <h2 class="game-text" >Stats</h2>
-          <p class="game-text" id="ships-hit">Ships Hit: <span
-          class="game-text data" id="ships-hit-count">0</span></p>
-          <p class="game-text" id="total-tries">Total Tries:
-          <span class="game-text data" id="total-tries-count">0</span></p>
-          <p class="game-text hide" id="accuracy">Accuracy:
-          <span class="game-text data" id="accuracy-count"></span>%</p>
+            <h2 class="game-text" >Stats</h2>
+            <p class="game-text" id="ships-hit">Ships Hit: <span
+            class="game-text data" id="ships-hit-count">0</span></p>
+            <p class="game-text" id="total-tries">Total Tries:
+            <span class="game-text data" id="total-tries-count">0</span></p>
+            <p class="game-text hide" id="accuracy">Accuracy:
+            <span class="game-text data" id="accuracy-count"></span>%</p>
         </div>
-        <div id="reset">
-            <button id="reset-button" style="display:none;">Reset</button>
+
+        <div id="reset" class="hide">
+            <button id="reset-button" class="game-button">Reset</button>
         </div>
+
     </body>
     <script src="battleship.js"></script>
 </html>
